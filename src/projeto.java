@@ -57,8 +57,19 @@ public class projeto {
         }
 
         //Padrão C
-        //TODO
-
+        System.out.println("Padrão C");
+        System.out.println();
+        for (int i = 0; i < numeroInserido; i++) {
+            numeroMostrar = 1;
+            for (int x=numeroInserido-i; x>1; x--) { //Imprime espaços por linha antes dos numeros
+                System.out.print("  ");
+            }
+            for (int j = 0; j <=i; j++) {
+                System.out.print(numeroMostrar+" ");
+                numeroMostrar++;
+            }
+            System.out.println();
+        }
     }
 
     public static void adivinha() {
