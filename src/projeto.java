@@ -1,6 +1,7 @@
 import java.util.Random;
 import java.util.Scanner;
 import java.lang.Math;
+import java.util.Arrays;
 
 public class projeto {
     static Scanner userInput = new Scanner(System.in);
@@ -83,8 +84,24 @@ public class projeto {
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
                 matriz[x][y]=rand.nextInt(9)+1;
-                System.out.println(matriz[x][y]);
+
+                    for (int z = 0; z < 9; z++){
+                        if(z!=y){
+                            if (matriz[x][y]==matriz[x][z]){
+                                matriz[x][y]=rand.nextInt(9)+1;
+                                z=0;
+                            }
+                        }
+                        if (z!=x){
+                            if (matriz[x][y]==matriz[z][y]){
+                                matriz[x][y]=rand.nextInt(9)+1;
+                                z=0;
+                            }
+                        }
+                    }
+                }
             }
+        System.out.println(Arrays.deepToString(matriz));
         }
     }
-}
+
