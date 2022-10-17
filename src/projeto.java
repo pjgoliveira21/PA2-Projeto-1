@@ -1,10 +1,10 @@
 import java.util.Random;
 import java.util.Scanner;
-import java.util.Arrays;
 
 public class projeto {
     static Scanner userInput = new Scanner(System.in);
     static boolean inputFlag;
+    static Random randomgen = new Random();
     public static void main(String[] args) {
 
         System.out.println(" ---------------------------------------------------");
@@ -15,7 +15,12 @@ public class projeto {
             case 1 -> padroes();
             case 2 -> adivinha();
             case 3 -> sudoku();
+            case 4 -> sair();
         }
+    }
+
+    public static void sair() {
+        System.exit(0);
     }
     public static int menu() {
         int escolhaMenu=0;
@@ -23,7 +28,8 @@ public class projeto {
             System.out.println(" --------/ Menu Principal /--------- \n");
             System.out.println("(1) Desenho de padrões");
             System.out.println("(2) Jogo do adivinha");
-            System.out.println("(3) Sudoku simplificado\n");
+            System.out.println("(3) Sudoku simplificado");
+            System.out.println("(4) Sair do programa\n");
             System.out.print("Escolha: ");
 
             try {
@@ -32,7 +38,7 @@ public class projeto {
                 inputFlag=true;
             }
 
-            if(escolhaMenu<1 || escolhaMenu>3 || inputFlag) {
+            if(escolhaMenu<1 || escolhaMenu>4 || inputFlag) {
                 System.out.println("Erro: Escolha inválida");
                 userInput.nextLine();
                 continue;
@@ -102,7 +108,7 @@ public class projeto {
     public static void adivinha() {
         int totalTentativas=0,tentativa=-1;
 
-        Random randomgen = new Random();
+
         int numeroGerado=randomgen.nextInt(1001);
         System.out.println(" ---------/ Jogo Da Adivinha /--------- \n");
         System.out.println("O programa gerou um numero aleatório entre 0 e 1000.");
@@ -128,30 +134,48 @@ public class projeto {
     }
 
     public static void sudoku() {
-        Random rand = new Random();
-        int[][] matriz = new int[9][9];
+        int[][] matriz = gerarArray();
+        mostrarArray(matriz);
+    }
 
+    public static int[][] gerarArray() {
+        int[][] matriz = new int[9][9];
+        int n;
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
-                matriz[x][y]=rand.nextInt(9)+1;
-
-                    for (int z = 0; z < 9; z++){
-                        if(z!=y){
-                            if (matriz[x][y]==matriz[x][z]){
-                                matriz[x][y]=rand.nextInt(9)+1;
-                                z=0;
-                            }
-                        }
-                        if (z!=x){
-                            if (matriz[x][y]==matriz[z][y]){
-                                matriz[x][y]=rand.nextInt(9)+1;
-                                z=0;
-                            }
-                        }
-                    }
-                }
+                do {
+                    n = randomgen.nextInt(10);
+                } while (checkDup(matriz,n, x, y));
+                matriz[x][y]=n;
             }
-        System.out.println(Arrays.deepToString(matriz));
+        }
+        return matriz;
+    }
+
+    public static boolean checkDup(int[][] matriz,int n, int x, int y) {
+        if(n==0) return false;
+        for (int z = 0; z < 9; z++) {
+
+            //Verificar linhas
+            if (z != y) {
+                if (n == matriz[x][z]) return true;
+            }
+
+            //Verificar colunas
+            if (z != x) {
+                if (n == matriz[z][y]) return true;
+            }
+        }
+        return false;
+    }
+
+    public static void mostrarArray(int[][] array) {
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
+                System.out.print("  " + array[x][y]);
+            }
+            System.out.println();
         }
     }
+}
 
