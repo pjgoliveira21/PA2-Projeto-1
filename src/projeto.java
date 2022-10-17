@@ -133,25 +133,32 @@ public class projeto {
 
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
-                matriz[x][y]=rand.nextInt(9)+1;
+                matriz[x][y]=rand.nextInt(10);
 
-                    for (int z = 0; z < 9; z++){
-                        if(z!=y){
+                for (int z = 0; z < 9; z++){
+                    if(z!=y){
+                        if(matriz[x][y]!=0){
                             if (matriz[x][y]==matriz[x][z]){
-                                matriz[x][y]=rand.nextInt(9)+1;
-                                z=0;
+                                matriz[x][y]=0;
                             }
                         }
-                        if (z!=x){
+                    }
+                    if(z!=x){
+                        if(matriz[x][y]!=0){
                             if (matriz[x][y]==matriz[z][y]){
-                                matriz[x][y]=rand.nextInt(9)+1;
-                                z=0;
+                                matriz[x][y]=0;
                             }
                         }
                     }
                 }
             }
-        System.out.println(Arrays.deepToString(matriz));
+        }
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
+                System.out.print("  "+matriz[x][y]);
+            }
+            System.out.println();
         }
     }
+}
 
