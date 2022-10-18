@@ -11,27 +11,33 @@ public class projeto {
         System.out.println("| Bem-vindo ao 1º Projeto de Programação do Grupo 5 |");
         System.out.println("|       Paulo Oliveira     e     Rafael Cosme       |");
         System.out.println(" ---------------------------------------------------\n");
-        switch (menu()) {
-            case 1 -> padroes();
-            case 2 -> adivinha();
-            case 3 -> sudoku();
-            case 4 -> sair();
-        }
+
+        boolean sair=false;
+        do {
+            switch (menu()) {
+                case 1 -> padroes();
+                case 2 -> adivinha();
+                case 3 -> sudoku();
+                case 4 -> {
+                    System.out.println("Obrigado por ter utilizado o programa, preesione ENTER para sair.");
+                    userInput.nextLine();
+                    sair=true;
+                }
+            }
+        } while(!sair);
     }
 
-    public static void sair() {
-        System.exit(0);
-    }
     public static int menu() {
         int escolhaMenu=0;
-        do {
-            System.out.println(" --------/ Menu Principal /--------- \n");
-            System.out.println("(1) Desenho de padrões");
-            System.out.println("(2) Jogo do adivinha");
-            System.out.println("(3) Sudoku simplificado");
-            System.out.println("(4) Sair do programa\n");
-            System.out.print("Escolha: ");
+        System.out.println(" --------/ Menu Principal /--------- \n");
+        System.out.println("(1) Desenho de padrões");
+        System.out.println("(2) Jogo do adivinha");
+        System.out.println("(3) Sudoku simplificado");
+        System.out.println("(4) Sair do programa\n");
 
+        do {
+            System.out.print("Escolha: ");
+            inputFlag=false;
             try {
                 escolhaMenu = Integer.parseInt(userInput.nextLine());
             } catch (Exception e) {
@@ -49,11 +55,12 @@ public class projeto {
         return escolhaMenu;
     }
     public static void padroes() {
-        int numeroInserido,numeroMostrar;
+        int numeroInserido=-1,numeroMostrar;
         do {
             System.out.println(" ---------/ Desenho de Padrões /--------- \n");
             System.out.print("Insira um numero entre 1 e 10: ");
-            numeroInserido = Integer.parseInt(userInput.nextLine());
+
+            inputFlag=false;
 
             try {
                 numeroInserido = Integer.parseInt(userInput.nextLine());
@@ -61,13 +68,20 @@ public class projeto {
                 inputFlag=true;
             }
 
-            if(numeroInserido<1 || numeroInserido>10 || inputFlag) System.out.println("Erro: "+numeroInserido+" não é um número válido.\nLembre-se do intervalo de números possíveis (1-10) e também de inserir apenas números inteiros.\n");
+            if(numeroInserido<1 || numeroInserido>10 || inputFlag) {
+                System.out.println("""
+                        Erro: Escolha inválida
+                        Lembre-se do intervalo de números possíveis (1-10) e também de inserir apenas números inteiros.
+                        """);
+                userInput.nextLine();
+                continue;
+            }
+            break;
             
-        }while(numeroInserido<1 || numeroInserido>10 || inputFlag);
+        }while(true);
 
         //Padrão A
-        System.out.println("Padrão A");
-        System.out.println();
+        System.out.println(" --/ Padrão A /-- ");
         for (int i = 0; i < numeroInserido; i++) {
             numeroMostrar = 1;
             for (int j = 0; j <=i; j++) {
@@ -80,8 +94,7 @@ public class projeto {
         System.out.println();
 
         //Padrão B
-        System.out.println("Padrão B");
-        System.out.println();
+        System.out.println(" --/ Padrão B /-- ");
         for (int i = numeroInserido; i >=1; i--) {
             for (int j = 1; j <= i; j++) {
                 System.out.print(j+" ");
@@ -89,9 +102,10 @@ public class projeto {
             System.out.println();
         }
 
-        //Padrão C
-        System.out.println("Padrão C");
         System.out.println();
+
+        //Padrão C
+        System.out.println(" --/ Padrão C /-- ");
         for (int i = 0; i < numeroInserido; i++) {
             numeroMostrar = 1;
             for (int x=numeroInserido-i; x>1; x--) { //Imprime espaços por linha antes dos numeros
@@ -103,34 +117,47 @@ public class projeto {
             }
             System.out.println();
         }
+
+        System.out.print("Pressione ENTER para continuar...");
+        userInput.nextLine();
     }
 
     public static void adivinha() {
         int totalTentativas=0,tentativa=-1;
-
-
         int numeroGerado=randomgen.nextInt(1001);
-        System.out.println(" ---------/ Jogo Da Adivinha /--------- \n");
+
+        System.out.println("\n ---------/ Jogo Da Adivinha /--------- \n");
         System.out.println("O programa gerou um numero aleatório entre 0 e 1000.");
         System.out.println("Tente adivinhá-lo!");
         System.out.println("DEBUG: N="+numeroGerado);
 
         do {
             System.out.print("A sua tentativa -> ");
+            inputFlag=false;
             try {
                 tentativa = Integer.parseInt(userInput.nextLine());
-                totalTentativas++;
-                if(tentativa>numeroGerado) System.out.println(tentativa+" é maior que o número gerado!");
-                else if(tentativa<numeroGerado) System.out.println(tentativa+" é menor que o número gerado!");
-                else System.out.println("Acertou em cheio! "+tentativa+" é o número gerado!\nForam precisas "+totalTentativas+" tentativas.");
 
             } catch (Exception e) {
                 inputFlag = true;
             }
 
-            if(tentativa<0 || tentativa>1000 || inputFlag) System.out.println("Erro: "+tentativa+" não é uma tentativa válida.\nLembre-se do intervalo de números possíveis (0-1000) e também de inserir apenas números inteiros.\n");
-        } while((tentativa!=numeroGerado) || inputFlag);
+            if(tentativa<0 || tentativa>1000 || inputFlag) {
+                System.out.print("""
+                        Erro: Tentativa inválida
+                        Lembre-se do intervalo de números possíveis (0-1000) e também de inserir apenas números inteiros.
+                        """);
 
+                userInput.nextLine();
+            }
+
+            else {
+                totalTentativas++;
+                if (tentativa > numeroGerado) System.out.println(tentativa + " é maior que o número gerado!");
+                else if (tentativa < numeroGerado) System.out.println(tentativa + " é menor que o número gerado!");
+                else System.out.println("Acertou em cheio! " + tentativa + " é o número gerado!\nForam precisas " + totalTentativas + " tentativas.");
+            }
+
+        } while(tentativa!=numeroGerado || inputFlag);
     }
 
     public static void sudoku() {
