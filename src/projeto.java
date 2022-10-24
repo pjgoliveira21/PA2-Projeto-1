@@ -6,14 +6,11 @@ public class projeto {
     //Variável para permitir input do utilizador
     static Scanner userInput = new Scanner(System.in);
 
-    //Variável para detetar inputs inválidos
-    static boolean inputFlag;
-
     //Variável para permitir gerar numeros aleatórios
     static Random randomgen = new Random();
     public static void main(String[] args) {
 
-        System.out.println(" ---------------------------------------------------");
+        System.out.println("\n ---------------------------------------------------");
         System.out.println("| Bem-vindo ao 1º Projeto de Programação do Grupo 5 |");
         System.out.println("|       Paulo Oliveira     e     Rafael Cosme       |");
         System.out.println(" ---------------------------------------------------\n");
@@ -35,22 +32,36 @@ public class projeto {
 
     public static int processarInput(String input) {
         int input_processado;
-        //Detetar inputs inválidos
-        try {
-            //Se o input do utilizador não for convertível em inteiro
-            //Significa que inseriu um valor não numérico ou numérico com decimais
-            //Será lançado um erro na linha a seguir
-            //Que será tratado ativando a variável que deteta inputs inválidos
-            input_processado = Integer.parseInt(input);
-        } catch (Exception e) {
-            return -1;
+
+        if(input.equals("")) {
+            return -2;
+        } else {
+            //Detetar inputs inválidos
+            try {
+                //Se o input do utilizador não for convertível em inteiro
+                //Significa que inseriu um valor não numérico ou numérico com decimais
+                //Será lançado um erro na linha a seguir
+                //Que será tratado retornando -1 à chamada da função
+                //Caso o input seja válido, será retornado na forma de inteiro, de forma a ser utilizado
+                input_processado = Integer.parseInt(input);
+            } catch (Exception e) {
+                return -1;
+            }
+
+            return input_processado;
         }
 
-        return input_processado;
+        //outputs desta função
+        //Input = espaço em branco(Enter) -> Output = -2
+        //Input = string não numérica inteira -> Output = -1
+        //Input = string numérica inteira -> Output = (int)input
+
+
     }
 
     public static int menu() {
-        int escolhaMenu=0;
+        int escolhaMenu;
+
         System.out.println(" --------/ Menu Principal /--------- \n");
         System.out.println("(1) Desenho de padrões");
         System.out.println("(2) Jogo do adivinha");
@@ -63,11 +74,11 @@ public class projeto {
 
             //Se o utilizador escolher uma opção fora dos limites do menu
             if(escolhaMenu<1 || escolhaMenu>4) {
-                System.out.println("Erro: Escolha inválida");
+                if(escolhaMenu==-2) continue;
 
+                System.out.println("Erro: Escolha inválida");
                 //Esperar por um ENTER
                 userInput.nextLine();
-
                 //Forçar a passagem para a próxima iteração
                 continue;
             }
@@ -77,7 +88,7 @@ public class projeto {
 
         } while(true);
 
-        //Retornar a escolha (já validada) do utilizador para entrar no switch da função main
+        //Retornar a escolha (já validada) do utilizador para a função main
         return escolhaMenu;
     }
     public static void padroes() {
@@ -89,6 +100,7 @@ public class projeto {
             numeroInserido=processarInput(userInput.nextLine());
 
             if(numeroInserido<1 || numeroInserido>10) {
+                if(numeroInserido==-2) continue;
                 System.out.println("""
                         Erro: Escolha inválida
                         Lembre-se do intervalo de números possíveis (1-10) e também de inserir apenas números inteiros.
@@ -142,7 +154,7 @@ public class projeto {
     }
 
     public static void adivinha() {
-        int totalTentativas=0,tentativa=-1;
+        int totalTentativas=0,tentativa;
 
         //Gerar numero de 0 a 1000 (1001 numeros)
         int numeroGerado=randomgen.nextInt(1001);
@@ -154,13 +166,9 @@ public class projeto {
 
         do {
             System.out.print("A sua tentativa -> ");
-            String tempInput=userInput.nextLine();
 
-            if(tempInput.equals("")) {
-                continue;
-            } else {
-                tentativa=processarInput(tempInput);
-            }
+            tentativa=processarInput(userInput.nextLine());
+
 
             if(tentativa<0 || tentativa>1000) {
                 System.out.print("""
@@ -187,22 +195,50 @@ public class projeto {
     public static void sudoku() {
         int[][] matriz = gerarArray();
         mostrarArray(matriz);
-        System.out.println("Insira uma posição com cordenadas de 1 a 9 no seguinte formato - x,y: ");
+        System.out.println("Insira uma posição com cordenadas de 0 a 8 no seguinte formato - x,y: ");
         String cordenadas=userInput.nextLine();
 
-        int x = processarInput(cordenadas.split(",")[0]);
-        int y = processarInput(cordenadas.split(",")[1]);
+        int x,y;
+
+            //Detetar inputs inválidos
+            try {
+                String Sx = cordenadas.split(",")[0];
+                String Sy = cordenadas.split(",")[1];
+                if(Sx.equals("") || Sy.equals("")) {
+                    System.out.println("São necessárias ambas as posições X e Y da cordenada!");
+                    return;
+                }
+                else {
+                    x = Integer.parseInt(Sx);
+                    y = Integer.parseInt(Sy);
+
+                    if(x < 0 || x > 8 || y < 0 || y > 8) {
+                        System.out.println("Cordenadas inválidas\n" +
+                                "Lembre-se do intervalo de posições possíveis \"(0-8),(0-8)\" e também de inserir apenas números inteiros.");
+                    }
+
+                    if(matriz[x][y]!=0) {
+                        System.out.println("A cordenada que inseriu não contém um 0 ("+matriz[x][y]+"), tente novamente.");
+                        return;
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Não foi possível obter as cordenadas inseridas, tente novamente.");
+                return;
+            }
 
         int[] possibilidades = new int[9];
 
         for (int i = 1; i <= 9; i++) {
+            System.out.println("Cordenada selecionada contém o numero "+matriz[x][y]);
             if(!checkDup(matriz,i,x,y)) {
                 possibilidades[i-1]=i;
             }
         }
 
         for (int v = 0; v < 9; v++) {
-            System.out.println(possibilidades[v]);
+            //if(possibilidades[v]!=0)
+                System.out.print(possibilidades[v]+" ");
         }
 
     }
@@ -252,7 +288,7 @@ public class projeto {
     public static void mostrarArray(int[][] array) {
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
-                System.out.print("  " + array[x][y]);
+                System.out.print(x+","+y+"->"+array[x][y]);
             }
             System.out.println();
         }
