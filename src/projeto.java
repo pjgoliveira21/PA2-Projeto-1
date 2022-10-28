@@ -3,6 +3,11 @@ import java.util.Scanner;
 
 public class projeto {
 
+    static String AZUL="\u001B[34m";
+    static String RESET="\u001B[0m";
+    static String VERMELHO = "\u001B[31m";
+
+
     //Variável para permitir input do utilizador
     static Scanner userInput = new Scanner(System.in);
 
@@ -29,7 +34,6 @@ public class projeto {
             }
         } while(!sair);
     }
-
     public static int processarInput(String input) {
         int input_processado;
 
@@ -58,15 +62,15 @@ public class projeto {
 
 
     }
-
     public static int menu() {
         int escolhaMenu;
 
-        System.out.println(" --------/ Menu Principal /--------- \n");
+        System.out.println("\n --------/ Menu Principal /--------- \n");
         System.out.println("(1) Desenho de padrões");
         System.out.println("(2) Jogo do adivinha");
         System.out.println("(3) Sudoku simplificado");
         System.out.println("(4) Sair do programa\n");
+
 
         do {
             System.out.print("Escolha: ");
@@ -76,9 +80,7 @@ public class projeto {
             if(escolhaMenu<1 || escolhaMenu>4) {
                 if(escolhaMenu==-2) continue;
 
-                System.out.println("Erro: Escolha inválida");
-                //Esperar por um ENTER
-                userInput.nextLine();
+                System.out.println(VERMELHO+"Escolha inválida"+RESET);
                 //Forçar a passagem para a próxima iteração
                 continue;
             }
@@ -101,10 +103,10 @@ public class projeto {
 
             if(numeroInserido<1 || numeroInserido>10) {
                 if(numeroInserido==-2) continue;
-                System.out.println("""
-                        Erro: Escolha inválida
+                System.out.println(VERMELHO+"""
+                        Escolha inválida
                         Lembre-se do intervalo de números possíveis (1-10) e também de inserir apenas números inteiros.
-                        """);
+                        """+RESET);
                 continue;
             }
             break;
@@ -148,11 +150,7 @@ public class projeto {
             }
             System.out.println();
         }
-
-        System.out.print("Pressione ENTER para continuar...");
-        userInput.nextLine();
     }
-
     public static void adivinha() {
         int totalTentativas=0,tentativa;
 
@@ -162,19 +160,16 @@ public class projeto {
         System.out.println("\n ---------/ Jogo Da Adivinha /--------- \n");
         System.out.println("O programa gerou um numero aleatório entre 0 e 1000.");
         System.out.println("Tente adivinhá-lo!");
-        System.out.println("DEBUG: N="+numeroGerado);
 
         do {
             System.out.print("A sua tentativa -> ");
-
             tentativa=processarInput(userInput.nextLine());
 
-
             if(tentativa<0 || tentativa>1000) {
-                System.out.print("""
+                System.out.print(VERMELHO+"""
                         Erro: Tentativa inválida
                         Lembre-se do intervalo de números possíveis (0-1000) e também de inserir apenas números inteiros.
-                        """);
+                        """+RESET);
             }
 
             else {
@@ -184,67 +179,85 @@ public class projeto {
                 else {
                     System.out.println("Acertou em cheio! " + tentativa + " é o número gerado!\n" +
                             "Foram precisas " + totalTentativas + " tentativas.");
-
-                    userInput.nextLine();
                 }
             }
-
         } while(tentativa != numeroGerado);
     }
 
     public static void sudoku() {
         int[][] matriz = gerarArray();
         mostrarArray(matriz);
-        System.out.println("Insira uma posição com cordenadas de 0 a 8 no seguinte formato - x,y: ");
-        String cordenadas=userInput.nextLine();
-
         int x,y;
 
-            //Detetar inputs inválidos
+        while(true) {
             try {
+                System.out.print("Insira a coluna e linha no seguinte formato - lin,col: ");
+                String cordenadas=userInput.nextLine();
+
                 String Sx = cordenadas.split(",")[0];
                 String Sy = cordenadas.split(",")[1];
-                if(Sx.equals("") || Sy.equals("")) {
-                    System.out.println("São necessárias ambas as posições X e Y da cordenada!");
-                    return;
-                }
-                else {
-                    x = Integer.parseInt(Sx);
-                    y = Integer.parseInt(Sy);
 
-                    if(x < 0 || x > 8 || y < 0 || y > 8) {
-                        System.out.println("Cordenadas inválidas\n" +
-                                "Lembre-se do intervalo de posições possíveis \"(0-8),(0-8)\" e também de inserir apenas números inteiros.");
-                    }
+                x = Integer.parseInt(Sx) - 1;
+                y = Integer.parseInt(Sy) - 1;
 
-                    if(matriz[x][y]!=0) {
-                        System.out.println("A cordenada que inseriu não contém um 0 ("+matriz[x][y]+"), tente novamente.");
-                        return;
-                    }
+                if (x < 0 || x > 8 || y < 0 || y > 8) {
+                    System.out.println(VERMELHO+"Posição inválida\n" +
+                            "Lembre-se do intervalo de posições possíveis \"(1-9),(1-9)\" e também de inserir apenas números inteiros."+RESET);
+                    continue;
+
+                } else if (matriz[x][y] != 0) {
+                    System.out.println(VERMELHO+"A posição que inseriu não contém um 0 (" + matriz[x][y] + ")"+RESET);
+                    continue;
                 }
+                break;
             } catch (Exception e) {
-                System.out.println("Não foi possível obter as cordenadas inseridas, tente novamente.");
-                return;
-            }
-
-        int[] possibilidades = new int[9];
-
-        for (int i = 1; i <= 9; i++) {
-            System.out.println("Cordenada selecionada contém o numero "+matriz[x][y]);
-            if(!checkDup(matriz,i,x,y)) {
-                possibilidades[i-1]=i;
+                System.out.println(VERMELHO+"Não foi possível obter a posição, tente novamente."+RESET);
             }
         }
 
-        for (int v = 0; v < 9; v++) {
-            //if(possibilidades[v]!=0)
-                System.out.print(possibilidades[v]+" ");
+        int[] possibilidades = obterPossiveis(matriz,x,y);
+
+        if(possibilidades.length==0) {
+            System.out.println("A posição referida não contém numeros possiveis.");
         }
 
+        else {
+            System.out.print("Numeros possiveis: ");
+            for (int i = 0; i < 9; i++) {
+                if(possibilidades[i]!=0) System.out.print(possibilidades[i]+" ");
+            }
+
+            int numEscolhido;
+            while(true) {
+                System.out.print("\nInsira o número possivel que deseja escolher: ");
+                numEscolhido = processarInput(userInput.nextLine());
+
+                //Espaço em branco
+                if(numEscolhido==-2) continue;
+
+                //String não numérica
+                if(numEscolhido==-1) System.out.println(VERMELHO+"Insira um número válido!"+RESET);
+                else break;
+            }
+
+            //Verificar se o numero escolhido existe dentro do array
+            boolean existe=false;
+            for (int i = 0; i < 9; i++) {
+                if(numEscolhido==possibilidades[i]) {
+                    existe = true;
+                    break;
+                }
+            }
+
+            if(existe) {
+                matriz[x][y]=numEscolhido;
+                mostrarArray(matriz,x,y);
+            }
+
+            else System.out.println(VERMELHO+"O número que inseriu não é um numero possivel."+RESET);
+        }
     }
-
     public static int[][] gerarArray() {
-
         //Criar array 2d
         int[][] matriz = new int[9][9];
         int n;
@@ -255,28 +268,23 @@ public class projeto {
                     n = randomgen.nextInt(10);
                 } while (checkDup(matriz,n, x, y));
                 //A variavel "n" vai receber numeros aleatórios até passar na função checkDup
-                //Esta função verifica se existem duplicados no eixo x e y
+                //Esta função verifica se existem duplicados
 
-                //Quando "n" receber um numero aleatório diferente de 0 que não se repete,
+                //Quando "n" receber um numero aleatório que não se repete ou 0,
                 //esse valor é aplicado na tabela final
                 matriz[x][y]=n;
             }
         }
         return matriz;
     }
-
     public static boolean checkDup(int[][] matriz,int n, int x, int y) {
-
         //Se "n" for 0, é retornada a informação de não é duplicado, porque 0 não passa por essa verificação
         if(n==0) return false;
-
         for (int z = 0; z < 9; z++) {
-
             //Verificar linhas
             if (z != y) {
                 if (n == matriz[x][z]) return true;
             }
-
             //Verificar colunas
             if (z != x) {
                 if (n == matriz[z][y]) return true;
@@ -284,14 +292,32 @@ public class projeto {
         }
         return false;
     }
-
+    public static int[] obterPossiveis(int[][] matriz,int x, int y) {
+        boolean arrayVazio=true;
+        int[] possiveis = new int[9];
+        for (int i = 1; i <= 9; i++) {
+            if(!checkDup(matriz,i,x,y)) {
+                possiveis[i - 1] = i;
+                arrayVazio=false;
+            }
+        }
+        return (arrayVazio ? new int[0] : possiveis);
+    }
     public static void mostrarArray(int[][] array) {
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
-                System.out.print(x+","+y+"->"+array[x][y]);
+                System.out.print(array[x][y]+" ");
+            }
+            System.out.println();
+        }
+    }
+    public static void mostrarArray(int[][] array, int Nx, int Ny) {
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
+                if(x==Nx && y==Ny) System.out.print(AZUL+array[x][y]+" "+RESET);
+                else System.out.print(array[x][y]+" ");
             }
             System.out.println();
         }
     }
 }
-
