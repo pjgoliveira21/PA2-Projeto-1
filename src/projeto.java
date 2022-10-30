@@ -20,15 +20,25 @@ public class projeto {
         do {
             //O switch receberá o valor retornado pelo menu (escolha do utilizador já validada)
             switch (menu()) {
-                case 1 -> padroes();
-                case 2 -> adivinha();
-                case 3 -> sudoku();
-                case 4 -> {
+                case 1 : {
+                    padroes();
+                    break;
+                }
+                case 2 : {
+                    adivinha();
+                    break;
+                }
+                case 3 : {
+                    sudoku();
+                    break;
+                }
+                case 4 : {
                     //O utilizador escolheu sair do programa
                     //é apresentada a mensagem de saída e acionada a flag de fim de programa
                     System.out.println("Obrigado por ter utilizado o programa, preesione ENTER para sair.");
                     userInput.nextLine();
                     sair=true;
+                    break;
                 }
             }
         } while(!sair);
@@ -77,10 +87,9 @@ public class projeto {
             if(numeroInserido<1 || numeroInserido>10) {
                 //No caso do utilizador inserir um espaço em branco, apenas ignora e prossegue a pedir um input novo
                 if(numeroInserido==-2) continue;
-                System.out.println(VERMELHO+"""
-                        Número inválido
-                        Lembre-se do intervalo de números possíveis (1-10) e também de inserir apenas números inteiros.
-                        """+RESET);
+                System.out.println(VERMELHO+"Número inválido" +
+                                "\nLembre-se do intervalo de números possíveis (1-10) e também de inserir apenas números inteiros."
+                                +RESET);
                 continue;
             }
             break;
@@ -144,10 +153,9 @@ public class projeto {
             if(tentativa==-2) continue;
 
             if(tentativa<0 || tentativa>1000) {
-                System.out.print(VERMELHO+"""
-                        Erro: Tentativa inválida
-                        Lembre-se do intervalo de números possíveis (0-1000) e também de inserir apenas números inteiros.
-                        """+RESET);
+                System.out.print(VERMELHO+"Número inválido" +
+                        "\nLembre-se do intervalo de números possíveis (0-1000) e também de inserir apenas números inteiros."
+                        +RESET);
             }
 
             else {
