@@ -1,9 +1,5 @@
 import java.util.Random;
 public class ProjetoUtils {
-    //Códigos para permitir cores
-    static String AZUL="\u001B[34m";
-    static String RESET="\u001B[0m";
-
     //Variável para permitir geração de numeros aleatórios a partir da biblioteca java.util.Random
     static Random randomgen = new Random();
 
@@ -40,6 +36,8 @@ public class ProjetoUtils {
         //Input = string não numérica inteira -> Output = -1
         //Input = string numérica inteira -> Output = (int)input
     }
+
+    //Função para gerar a tabela
     public static int[][] gerarArray() {
         //Criar array 2d
         int[][] matriz = new int[9][9];
@@ -111,7 +109,7 @@ public class ProjetoUtils {
     public static void mostrarArray(int[][] array, int NumX, int NumY) {
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
-                if(x==NumX && y==NumY) System.out.print(AZUL+array[x][y]+" "+RESET);
+                if(x==NumX && y==NumY) System.out.print(array[x][y]+" ");
                 else System.out.print(array[x][y]+" ");
             }
             System.out.println();
